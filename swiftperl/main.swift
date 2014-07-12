@@ -16,12 +16,11 @@ println(pl.double("pi"))
 pl.eval("$t = q(0 but true)")
 println(pl.int("t"))
 println(pl.string("t"))
-println(pl.eval(
-    "$iam = reverse q(rekcaH lreP tfiwS rehtonA tsuJ)"
-))
+println(pl.bool("t"))
+pl.eval("$iam = reverse q(rekcaH lreP tfiwS rehtonA tsuJ)")
 println(pl.string("iam"))
-pl.preamble = "use strict;"
-pl.eval("print $nonexistent")
+println(pl.eval("use strict; print $nonexistent"))
 println(pl.errstr)
-pl.eval("use Data::Dumper; print Dumper(\\%ENV)")
+//pl.eval("use Data::Dumper; print Dumper(\\%ENV)")
+
 Perl.systerm()

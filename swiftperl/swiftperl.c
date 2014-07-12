@@ -50,11 +50,17 @@ void swiftperl_sys_term() {
     PERL_SYS_TERM();
 }
 int swiftperl_eval_pv(const char* script, I32 croak_on_error) {
-    SV *result = eval_pv(script, croak_on_error);
-    return SvIV(result) != 0;
+    eval_pv(script, croak_on_error);
+    return SvTRUE(ERRSV);
 }
 char *swiftperl_errstr() {
     return SvPVx_nolen(ERRSV);
+}
+int swiftperl_getbool(char *name) {
+    return SvTRUE(get_sv(name, 0));
+}
+unsigned long swiftperl_getuv(char *name) {
+    return (unsigned long)SvUV(get_sv(name, 0));
 }
 long swiftperl_getiv(char *name) {
     return (long)SvIV(get_sv(name, 0));

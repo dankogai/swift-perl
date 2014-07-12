@@ -16,11 +16,17 @@ class Perl {
     var preamble = "use v5.16; no strict;"
     func eval(script:String)->Bool {
         return  (preamble+script).withCString {
-            swiftperl_eval_pv($0, 0) == 1
+            swiftperl_eval_pv($0, 0) == 0
         }
     }
     var errstr:String {
         return String.fromCString(CString(swiftperl_errstr()))!
+    }
+    func bool(name:String)->Bool {
+        return name.withCString { swiftperl_getbool($0) != 0 }
+    }
+    func uint(name:String)->UInt {
+        return name.withCString { swiftperl_getuv($0) }
     }
     func int(name:String)->Int {
         return name.withCString { swiftperl_getiv($0) }

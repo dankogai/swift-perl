@@ -6,6 +6,19 @@
 //  Copyright (c) 2014 Dan Kogai. All rights reserved.
 //
 
+class PerlSV : Printable {
+    let sv:UnsafePointer<()>
+    init (_ sv:UnsafePointer<()>){ self.sv = sv }
+    var defined:Bool    { return swiftperl_svdefined(sv) != 0 }
+    var asBool:Bool     { return swiftperl_svtrue(sv) != 0 }
+    var asUInt:UInt     { return swiftperl_svuv(sv) }
+    var asInt:Int       { return swiftperl_sviv(sv) }
+    var asDouble:Double { return swiftperl_svnv(sv) }
+    var asString:String {
+        return String.fromCString(CString(swiftperl_svpv(sv)))!
+    }
+    var description:String { return asString }
+}
 
 class Perl {
     init () { swiftperl_init() }
@@ -14,29 +27,19 @@ class Perl {
     class func sysinit() { swiftperl_sys_init() }
     class func systerm() { swiftperl_sys_term() }
     var preamble = "use v5.16; no strict;"
-    func eval(script:String)->Bool {
+    func eval(script:String)->PerlSV {
         return  (preamble+script).withCString {
-            swiftperl_eval_pv($0, 0) == 0
+            PerlSV(swiftperl_eval_pv($0, 0))
         }
+    }
+    var evalok:Bool {
+        return swiftperl_err() == 0
     }
     var errstr:String {
         return String.fromCString(CString(swiftperl_errstr()))!
     }
-    func bool(name:String)->Bool {
-        return name.withCString { swiftperl_getbool($0) != 0 }
-    }
-    func uint(name:String)->UInt {
-        return name.withCString { swiftperl_getuv($0) }
-    }
-    func int(name:String)->Int {
-        return name.withCString { swiftperl_getiv($0) }
-    }
-    func double(name:String)->Double {
-        return name.withCString { swiftperl_getnv($0) }
-    }
-    func string(name:String)->String {
-        return name.withCString {
-            String.fromCString(CString(swiftperl_getpv($0)))!
-        }
+    func $(name:String) -> PerlSV? {
+        let sv = name.withCString { swiftperl_get_sv($0) }
+        return sv == nil ? nil : PerlSV(sv)
     }
 }

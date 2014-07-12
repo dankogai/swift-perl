@@ -6,21 +6,37 @@
 //  Copyright (c) 2014 Dan Kogai. All rights reserved.
 //
 
+
 Perl.sysinit()
 
+func run(script:String) {
+    let pl = Perl()
+    let sv = pl.eval(script)
+    println("eval \"\(script)\"")
+    if !pl.evalok {
+        println(" err:   \(pl.errstr)")
+    } else {
+        println("  !!:   \(sv.asBool)")
+        println("  int:  \(sv.asInt)")
+        println("  +0.0: \(sv.asDouble)")
+        println("  q{}.: \(sv.asString)")
+    }
+}
+run("reverse q(rekcaH lreP rehtonA tsuJ)")
+run("atan2(0,-1)")
+run("q{0 but true}")
+run("my @a = (0,1,2,3)")
+run("my %h = (zero => 0, one => 1)")
+run("sub{ @_ }")
+run("phpinfo()")
+
 let pl = Perl()
-pl.eval("$pi = atan2(0, -1);")
-pl.eval("say $pi")
-println(pl.int("pi"))
-println(pl.double("pi"))
-pl.eval("$t = q(0 but true)")
-println(pl.int("t"))
-println(pl.string("t"))
-println(pl.bool("t"))
-pl.eval("$iam = reverse q(rekcaH lreP tfiwS rehtonA tsuJ)")
-println(pl.string("iam"))
-println(pl.eval("use strict; print $nonexistent"))
-println(pl.errstr)
-//pl.eval("use Data::Dumper; print Dumper(\\%ENV)")
+pl.eval("our $swift = q(0.0 but rocks)")
+println(pl.$("swift"))
+println(pl.$("swift")?.asBool)
+println(pl.$("swift")?.asDouble)
+println(pl.$("objC"))
+pl.eval("use Data::Dumper")
+println(pl.eval("Dumper(\\%ENV)"))
 
 Perl.systerm()

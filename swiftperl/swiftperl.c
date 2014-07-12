@@ -49,25 +49,33 @@ void swiftperl_sys_term() {
     if (my_perl != NULL) swiftperl_deinit();
     PERL_SYS_TERM();
 }
-int swiftperl_eval_pv(const char* script, I32 croak_on_error) {
-    eval_pv(script, croak_on_error);
+void *swiftperl_eval_pv(const char* script, I32 croak_on_error) {
+    return (void *)eval_pv(script, croak_on_error);
+}
+int swiftperl_err() {
     return SvTRUE(ERRSV);
 }
 char *swiftperl_errstr() {
     return SvPVx_nolen(ERRSV);
 }
-int swiftperl_getbool(char *name) {
-    return SvTRUE(get_sv(name, 0));
+void *swiftperl_get_sv(char *name) {
+    return (void *)get_sv(name, 0);
 }
-unsigned long swiftperl_getuv(char *name) {
-    return (unsigned long)SvUV(get_sv(name, 0));
+int swiftperl_svdefined(void *vp) {
+    return (SV *)vp != &PL_sv_undef;
 }
-long swiftperl_getiv(char *name) {
-    return (long)SvIV(get_sv(name, 0));
+int swiftperl_svtrue(void *vp) {
+    return SvTRUE((SV *)vp);
 }
-double swiftperl_getnv(char *name) {
-    return (double)SvNV(get_sv(name, 0));
+unsigned long swiftperl_svuv(void *vp) {
+    return (unsigned long)SvUV((SV *)vp);
 }
-char *swiftperl_getpv(char *name) {
-    return SvPV_nolen(get_sv(name, 0));
+long swiftperl_sviv(void *vp) {
+    return (long)SvIV((SV *)vp);
+}
+double swiftperl_svnv(void *vp) {
+    return (double)SvNV((SV *)vp);
+}
+char *swiftperl_svpv(void *vp) {
+    return SvPV_nolen((SV *)vp);
 }

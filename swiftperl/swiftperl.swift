@@ -24,8 +24,8 @@ class Perl {
     init () { swiftperl_init() }
     deinit  { swiftperl_deinit() }
     func clean() {  swiftperl_deinit(); swiftperl_init() }
-    class func sysinit() { swiftperl_sys_init() }
-    class func systerm() { swiftperl_sys_term() }
+    class func sysInit() { swiftperl_sys_init() }
+    class func sysTerm() { swiftperl_sys_term() }
     var preamble = "use v5.16; no strict;"
     func eval(script:String)->PerlSV {
         return  (preamble+script).withCString {

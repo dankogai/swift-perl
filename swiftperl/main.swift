@@ -7,7 +7,7 @@
 //
 
 
-Perl.sysinit()
+Perl.sysInit()
 
 func run(script:String) {
     let pl = Perl()
@@ -39,4 +39,4 @@ println(pl.$("objC"))
 pl.eval("use Data::Dumper")
 println(pl.eval("Dumper(\\%ENV)"))
 
-Perl.systerm()
+Perl.sysTerm()

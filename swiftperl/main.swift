@@ -16,6 +16,10 @@ println(pl.double("pi"))
 pl.eval("$t = q(0 but true)")
 println(pl.int("t"))
 println(pl.string("t"))
+println(pl.eval(
+    "$iam = reverse q(rekcaH lreP tfiwS rehtonA tsuJ)"
+))
+println(pl.string("iam"))
 pl.preamble = "use strict;"
 pl.eval("print $nonexistent")
 println(pl.errstr)

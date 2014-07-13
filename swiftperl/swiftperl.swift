@@ -41,9 +41,19 @@ class PerlSV : Printable {
 }
 
 class Perl {
-    init () { swiftperl_init() }
-    deinit  { swiftperl_deinit() }
-    func clean() {  swiftperl_deinit(); swiftperl_init() }
+    var debug:Bool
+    init(debug:Bool=false) {
+        self.debug = debug
+        swiftperl_init()
+    }
+    deinit  {
+        if debug { println("Perl: deinitializing interpreter") }
+        swiftperl_deinit()
+    }
+    func reinit() {
+        if debug { println("Perl: reinitializing interpreter") }
+        swiftperl_deinit(); swiftperl_init()
+    }
     class func sysInit() { swiftperl_sys_init() }
     class func sysTerm() { swiftperl_sys_term() }
     var preamble = "use v5.16; no strict;"

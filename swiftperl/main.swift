@@ -10,7 +10,7 @@
 Perl.sysInit()
 
 func run(script:String) {
-    let pl = Perl()
+    let pl = Perl(debug:true)
     let sv = pl.eval(script)
     println("eval \"\(script)\"")
     if !pl.evalok {
@@ -27,10 +27,12 @@ run("atan2(0,-1)")
 run("q{0 but true}")
 run("my @a = (0,1,2,3)")
 run("my %h = (zero => 0, one => 1)")
+run("qr/\\A(.*)\\z/msx")
 run("sub{ @_ }")
 run("phpinfo()")
 
 let pl = Perl()
+
 pl.eval("our $swift = q(0.0 but rocks)")
 println(pl.$("swift"))
 println(pl.$("swift")?.asBool)
@@ -38,9 +40,11 @@ println(pl.$("swift")?.asDouble)
 println(pl.$("objC"))
 
 pl.eval("our $scalar")
-let scalar = pl.$("scalar")!
+let scalar = pl.sv("scalar")!
 println(scalar.defined)
-scalar.asInt = 42
+scalar.asBool = !scalar.asBool
+pl.eval("say $scalar")
+scalar.asInt *= 42
 pl.eval("say $scalar")
 scalar.asDouble += 0.195
 pl.eval("say $scalar")

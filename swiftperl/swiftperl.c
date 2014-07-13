@@ -30,7 +30,7 @@ void *swiftperl_init () {
     if (my_perl != NULL) {
         fprintf(stderr, "%s\n",
                 "Multiple perl instance is not supported yet\n");
-        return NULL;
+        exit(-1);
     }
     char *embedding[] = { "", "-e", "1" };
     my_perl = perl_alloc();

@@ -40,6 +40,39 @@ class PerlSV : Printable {
     var description:String { return asString }
 }
 
+class PerlAV : Printable {
+    let av:UnsafePointer<()>
+    init (_ sv:UnsafePointer<()>){ self.av = sv }
+    func toArray()->[PerlSV?] {
+        var result = [PerlSV?]()
+        for i in 0..<swiftperl_av_len(av) {
+            let sv = swiftperl_av_fetch(av, i)
+            result.append(sv == nil ? nil : PerlSV(sv))
+        }
+        return result
+    }
+    var description:String { return "\(self.toArray())" }
+}
+
+class PerlHV {
+    let hv:UnsafePointer<()>
+    init (_ hv:UnsafePointer<()>){ self.hv = hv }
+    func toDictionary()->[String:PerlSV?] {
+        var result = [String:PerlSV?]()
+        swiftperl_hv_iterinit(hv)
+        while true {
+            let he = swiftperl_hv_iternext(hv)
+            if he == nil { break }
+            let key = String.fromCString(
+                CString(swiftperl_hv_iterkey(he))
+                )!
+            result[key] = PerlSV(swiftperl_hv_iterval(he))
+        }
+        return result
+    }
+    var description:String { return "\(self.toDictionary())" }
+}
+
 class Perl {
     var debug:Bool
     init(debug:Bool=false) {
@@ -77,33 +110,16 @@ class Perl {
     func $(name:String, _ add:Bool=false)->PerlSV? {
         return self.sv(name, add)
     }
-    func av(name:String, _ add:Bool=false)->[PerlSV?]? {
+    func av(name:String, _ add:Bool=false)->PerlAV? {
         let av = name.withCString {
             swiftperl_get_av($0, add ? 1 : 0)
         }
-        if av == nil { return nil }
-        var result = [PerlSV?]()
-        for i in 0..<swiftperl_av_len(av) {
-            let sv = swiftperl_av_fetch(av, i)
-            result.append(sv == nil ? nil : PerlSV(sv))
-        }
-        return result
+        return av == nil ? nil : PerlAV(av)
     }
-    func hv(name:String, _ add:Bool=false)->[String:PerlSV?]? {
+    func hv(name:String, _ add:Bool=false)->PerlHV?? {
         let hv = name.withCString {
             swiftperl_get_hv($0, add ? 1 : 0)
         }
-        if hv == nil { return nil }
-        var result = [String:PerlSV?]()
-        swiftperl_hv_iterinit(hv)
-        while true {
-            let he = swiftperl_hv_iternext(hv)
-            if he == nil { break }
-            let key = String.fromCString(
-                CString(swiftperl_hv_iterkey(he))
-            )!
-            result[key] = PerlSV(swiftperl_hv_iterval(he))
-        }
-        return result
+        return hv == nil ? nil : PerlHV(hv)
     }
 }

@@ -52,11 +52,27 @@ scalar.asString += "km"
 pl.eval("say $scalar")
 scalar.undef()
 pl.eval("say $scalar")
+// array
+pl.eval("our @array")
+let array = pl.av("array")!
+array[0].asInt = 0
+array[3].asInt = 3
+println(pl.av("array"))
+println(array.delete(0))
+println(pl.av("array"))
+// hash
+pl.eval("our %hash")
+let hash = pl.hv("hash")!
+hash["zero"].asInt = 0
+hash["one"].asInt = 1
+println(pl.hv("hash"))
+println(hash.delete("one"))
+println(pl.hv("hash"))
 
-println(pl.av("INC"))
-println(pl.hv("INC"))
-
-pl.eval("use Data::Dumper")
-println(pl.eval("Dumper(\\%INC)"))
+//println(pl.av("INC"))
+//println(pl.hv("INC"))
+//
+//pl.eval("use Data::Dumper")
+//println(pl.eval("Dumper(\\%INC)"))
 
 Perl.sysTerm()

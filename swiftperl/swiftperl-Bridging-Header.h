@@ -24,10 +24,13 @@ void swiftperl_setpv(void *vp, char *pv);
 // for AV
 void *swiftperl_get_av(char *name, int add);
 int swiftperl_av_len(void *vp);
-void *swiftperl_av_fetch(void *vp, int key);
+void *swiftperl_av_fetch(void *vp, int key, int add);
+void *swiftperl_av_delete(void *vp, int key);
 // for HV
 void *swiftperl_get_hv(char *name, int add);
+void *swiftperl_hv_fetchs(void *vp, char *key, int add);
 int swiftperl_hv_iterinit(void *vp);
 void *swiftperl_hv_iternext(void *vp);
 char *swiftperl_hv_iterkey(void *vp);
 void *swiftperl_hv_iterval(void *vp);
+void *swiftperl_hv_delete(void *vp, char *key);

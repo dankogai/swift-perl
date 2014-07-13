@@ -45,16 +45,30 @@ class PerlAV : Printable {
     init (_ sv:UnsafePointer<()>){ self.av = sv }
     func toArray()->[PerlSV?] {
         var result = [PerlSV?]()
-        for i in 0..<swiftperl_av_len(av) {
-            let sv = swiftperl_av_fetch(av, i)
+        for i in 0...swiftperl_av_len(av) {
+            let sv = swiftperl_av_fetch(av, i, 0)
             result.append(sv == nil ? nil : PerlSV(sv))
         }
         return result
     }
+    func get(i:Int)->PerlSV? {
+        // it is NOT optional because it is always created
+        let sv = swiftperl_av_fetch(av, Int32(i), 0)
+        return sv == nil ? nil : PerlSV(sv)
+    }
+    func delete(i:Int)->PerlSV? {
+        // it is NOT optional because it is always created
+        let sv = swiftperl_av_delete(av, Int32(i))
+        return sv == nil ? nil : PerlSV(sv)
+    }
+    subscript(i:Int)->PerlSV {
+        // it is NOT optional because it is always created
+        return PerlSV(swiftperl_av_fetch(av, Int32(i), 1))
+    }
     var description:String { return "\(self.toArray())" }
 }
 
-class PerlHV {
+class PerlHV : Printable {
     let hv:UnsafePointer<()>
     init (_ hv:UnsafePointer<()>){ self.hv = hv }
     func toDictionary()->[String:PerlSV?] {
@@ -69,6 +83,20 @@ class PerlHV {
             result[key] = PerlSV(swiftperl_hv_iterval(he))
         }
         return result
+    }
+    func get(k:String)->PerlSV? {
+        let sv = swiftperl_hv_fetchs(hv, k.withCString{$0}, 0)
+        return sv == nil ? nil : PerlSV(sv)
+    }
+    func delete(k:String)->PerlSV? {
+        let sv = swiftperl_hv_delete(hv, k.withCString{$0})
+        return sv == nil ? nil : PerlSV(sv)
+    }
+    subscript(k:String)->PerlSV {
+        // it is NOT optional because it is always created
+        return PerlSV(
+            swiftperl_hv_fetchs(hv, k.withCString{$0}, 1)
+            )
     }
     var description:String { return "\(self.toDictionary())" }
 }
@@ -116,7 +144,7 @@ class Perl {
         }
         return av == nil ? nil : PerlAV(av)
     }
-    func hv(name:String, _ add:Bool=false)->PerlHV?? {
+    func hv(name:String, _ add:Bool=false)->PerlHV? {
         let hv = name.withCString {
             swiftperl_get_hv($0, add ? 1 : 0)
         }

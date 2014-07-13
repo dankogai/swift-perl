@@ -6,7 +6,7 @@
 //  Copyright (c) 2014 Dan Kogai. All rights reserved.
 //
 
-
+/// don't forget to do this before making a Perl instance!
 Perl.sysInit()
 
 func run(script:String) {
@@ -38,7 +38,7 @@ println(pl.$("swift"))
 println(pl.$("swift")?.asBool)
 println(pl.$("swift")?.asDouble)
 println(pl.$("objC"))
-
+// scalar
 pl.eval("our $scalar")
 let scalar = pl.sv("scalar")!
 println(scalar.defined)
@@ -68,11 +68,12 @@ hash["one"].asInt = 1
 println(pl.hv("hash"))
 println(hash.delete("one"))
 println(pl.hv("hash"))
-
 //println(pl.av("INC"))
 //println(pl.hv("INC"))
-//
-//pl.eval("use Data::Dumper")
-//println(pl.eval("Dumper(\\%INC)"))
 
+/// use
+pl.eval("use Data::Dumper")
+println(pl.eval("Dumper(\\%INC)"))
+
+/// And don't forget to do this before exit!
 Perl.sysTerm()

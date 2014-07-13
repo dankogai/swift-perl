@@ -6,8 +6,8 @@ Run [Perl] from [Swift].
 [Perl]: http://www.perl.org/
 [Swift]: https://developer.apple.com/swift/
 
-Prerequisites and Install
--------------------------
+Prerequisites
+-------------
 
 You need Yosemite DP3 and Xcode-beta3.
 
@@ -21,4 +21,4 @@ And edit main.swift to your liking.
 Caution
 -------
 
-* The perl embedded is the one on the system.
+* The perl embedded is the one on the system, which is 5.16.3 as of Yosemite DP3

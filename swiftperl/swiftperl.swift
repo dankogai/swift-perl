@@ -147,6 +147,14 @@ class Perl {
     var errstr:String {
         return String.fromCString(CString(swiftperl_errstr()))!
     }
+    func use(name:String)->PerlSV {
+        return self.eval("use \(name);")
+    }
+    func use<T>(name:String, _ args:T...)->PerlSV {
+        return self.use(
+            name + " " + ",".join(args.map{"'\($0)'"})
+        )
+    }
     func sv(name:String, _ add:Bool=false) -> PerlSV? {
         let sv = name.withCString {
             swiftperl_get_sv($0, add ? 1 : 0)

@@ -68,13 +68,6 @@ hash["one"].asInt = 1
 println(pl.hv("hash"))
 println(hash.delete("one"))
 println(pl.hv("hash"))
-//println(pl.av("INC"))
-//println(pl.hv("INC"))
-
-/// use
-pl.eval("use Data::Dumper")
-println(pl.eval("Dumper(\\%INC)"))
-
 /// reference
 pl.eval("our $ref = 0")
 println(pl.$("ref")!.refType)
@@ -87,6 +80,9 @@ println(pl.$("ref")!.toArray())
 pl.eval("$ref = {zero=>0}")
 println(pl.$("ref")!.refType)
 println(pl.$("ref")!.toHash())
+/// use
+pl.use("Scalar::Util", "dualvar")
+let dv = pl.eval("dualvar 42, q(The Answer)")
+println(dv.asInt)
+println(dv.asString)
 
-/// And don't forget to do this before exit!
-Perl.sysTerm()

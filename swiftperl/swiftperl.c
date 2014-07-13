@@ -108,10 +108,8 @@ void *swiftperl_av_fetch(void *vp, int key, int add) {
     return svp ? (void *)*svp : NULL;
 }
 void *swiftperl_av_delete(void *vp, int key) {
-    SV **svp = av_delete((AV *)vp, key, 0);
-    return svp ? (void *)*svp : NULL;
+    return (void *)av_delete((AV *)vp, key, 0);
 }
-
 // hv getters
 void *swiftperl_get_hv(char *name, int add) {
     return (void *)get_hv(name, add ? GV_ADD : 0);
@@ -120,7 +118,7 @@ int swiftperl_hv_iterinit(void *vp) {
     return hv_iterinit((HV *)vp);
 }
 void *swiftperl_hv_fetchs(void *vp, char *key, int add) {
-    SV **svp = hv_fetch((HV *)vp, key, strlen(key),
+    SV **svp = hv_fetch((HV *)vp, key, (int)strlen(key),
                         add ? GV_ADD : 0);
     return svp ? (void *)*svp : NULL;
 }
@@ -136,6 +134,21 @@ void *swiftperl_hv_iterval(void *vp) {
 }
 // hv setters
 void *swiftperl_hv_delete(void *vp, char *key) {
-    return (void *)hv_delete((HV *)vp, key, strlen(key), 0);
+    return (void *)hv_delete((HV *)vp, key, (int)strlen(key), 0);
 }
-
+// rv getters
+char *swiftperl_reftype(void *vp) {
+    SvGETMAGIC((SV *)vp);
+    if (SvROK((SV *)vp)) {
+        return (char *)sv_reftype(SvRV((SV *)vp), 0);
+    } else {
+        return "";
+    }
+}
+void *swiftperl_deref(void *vp) {
+    if (SvROK((SV *)vp)) {
+        return (void *)SvRV((SV *)vp);
+    } else {
+        return NULL;
+    }
+}

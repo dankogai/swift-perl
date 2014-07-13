@@ -75,5 +75,18 @@ println(pl.hv("hash"))
 pl.eval("use Data::Dumper")
 println(pl.eval("Dumper(\\%INC)"))
 
+/// reference
+pl.eval("our $ref = 0")
+println(pl.$("ref")!.refType)
+pl.eval("$ref = \\0")
+println(pl.$("ref")!.refType)
+println(pl.$("ref")!.toScalar())
+pl.eval("$ref = [0]")
+println(pl.$("ref")!.refType)
+println(pl.$("ref")!.toArray())
+pl.eval("$ref = {zero=>0}")
+println(pl.$("ref")!.refType)
+println(pl.$("ref")!.toHash())
+
 /// And don't forget to do this before exit!
 Perl.sysTerm()

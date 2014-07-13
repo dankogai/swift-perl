@@ -38,6 +38,24 @@ class PerlSV : Printable {
     }
     }
     var description:String { return asString }
+    // References
+    var refType: String {
+        return String.fromCString(
+            CString(swiftperl_reftype(sv))
+        )!
+    }
+    func toScalar() -> PerlSV? {
+        return refType == "SCALAR"
+            ? PerlSV(swiftperl_deref(sv)) : nil
+    }
+    func toArray() -> PerlAV? {
+        return refType == "ARRAY"
+            ? PerlAV(swiftperl_deref(sv)) : nil
+    }
+    func toHash() -> PerlHV? {
+        return refType == "HASH"
+            ? PerlHV(swiftperl_deref(sv)) : nil
+    }
 }
 
 class PerlAV : Printable {

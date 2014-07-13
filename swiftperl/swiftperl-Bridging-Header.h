@@ -34,3 +34,6 @@ void *swiftperl_hv_iternext(void *vp);
 char *swiftperl_hv_iterkey(void *vp);
 void *swiftperl_hv_iterval(void *vp);
 void *swiftperl_hv_delete(void *vp, char *key);
+// for RV
+char *swiftperl_reftype(void *vp);
+void *swiftperl_deref(void *vp);

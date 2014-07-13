@@ -79,4 +79,21 @@ class Perl {
         }
         return result
     }
+    func hv(name:String, _ add:Bool=false)->[String:PerlSV?]? {
+        let hv = name.withCString {
+            swiftperl_get_hv($0, add ? 1 : 0)
+        }
+        if hv == nil { return nil }
+        var result = [String:PerlSV?]()
+        swiftperl_hv_iterinit(hv)
+        while true {
+            let he = swiftperl_hv_iternext(hv)
+            if he == nil { break }
+            let key = String.fromCString(
+                CString(swiftperl_hv_iterkey(he))
+            )!
+            result[key] = PerlSV(swiftperl_hv_iterval(he))
+        }
+        return result
+    }
 }

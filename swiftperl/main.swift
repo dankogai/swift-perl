@@ -36,7 +36,20 @@ println(pl.$("swift"))
 println(pl.$("swift")?.asBool)
 println(pl.$("swift")?.asDouble)
 println(pl.$("objC"))
-pl.eval("use Data::Dumper")
-println(pl.eval("Dumper(\\%ENV)"))
+//pl.eval("use Data::Dumper")
+//println(pl.eval("Dumper(\\%ENV)"))
+
+pl.eval("our $scalar")
+println(pl.$("scalar")?.defined)
+pl.$("scalar")!.asInt = 42
+pl.eval("say $scalar")
+pl.$("scalar")!.asDouble += 0.195
+pl.eval("say $scalar")
+pl.$("scalar")!.asString += "km"
+pl.eval("say $scalar")
+pl.$("scalar")!.undef()
+pl.eval("say $scalar")
+let a = pl.av("INC")
+println(a?.count)
 
 Perl.sysTerm()

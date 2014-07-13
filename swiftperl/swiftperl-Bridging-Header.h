@@ -9,10 +9,19 @@ void *swiftperl_eval_pv(const char* script, int croak_on_error);
 int  swiftperl_err();
 char *swiftperl_errstr();
 // for PerlSV
-void *swiftperl_get_sv(char *name);
-int swiftperl_svdefined(void *vp);
+void *swiftperl_get_sv(char *name, int add);
+int swiftperl_svok(void *vp);
 int swiftperl_svtrue(void *vp);
 unsigned long swiftperl_svuv(void *vp);
 long swiftperl_sviv(void *vp);
 double swiftperl_svnv(void *vp);
 char *swiftperl_svpv(void *vp);
+int swiftperl_undef(void *vp);
+void swiftperl_setuv(void *vp, unsigned long uv);
+void swiftperl_setiv(void *vp, long iv);
+void swiftperl_setnv(void *vp, double nv);
+void swiftperl_setpv(void *vp, char *pv);
+// for AV
+void *swiftperl_get_av(char *name, int add);
+int swiftperl_av_len(void *vp);
+void *swiftperl_av_fetch(void *vp, int key);

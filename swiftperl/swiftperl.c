@@ -58,11 +58,12 @@ int swiftperl_err() {
 char *swiftperl_errstr() {
     return SvPVx_nolen(ERRSV);
 }
-void *swiftperl_get_sv(char *name) {
-    return (void *)get_sv(name, 0);
+void *swiftperl_get_sv(char *name, int add) {
+    return (void *)get_sv(name, add ? GV_ADD : 0);
 }
-int swiftperl_svdefined(void *vp) {
-    return (SV *)vp != &PL_sv_undef;
+// sv getters
+int swiftperl_svok(void *vp) {
+    return SvOK((SV *)vp);
 }
 int swiftperl_svtrue(void *vp) {
     return SvTRUE((SV *)vp);
@@ -79,3 +80,31 @@ double swiftperl_svnv(void *vp) {
 char *swiftperl_svpv(void *vp) {
     return SvPV_nolen((SV *)vp);
 }
+// sv setters
+void swiftperl_undef(void *vp) {
+    sv_setsv_mg((SV *)vp, &PL_sv_undef);
+}
+void swiftperl_setuv(void *vp, unsigned long uv) {
+    sv_setuv_mg((SV *)vp, uv);
+}
+void swiftperl_setiv(void *vp, long iv) {
+    sv_setiv_mg((SV *)vp, iv);
+}
+void swiftperl_setnv(void *vp, double nv) {
+    sv_setnv_mg((SV *)vp, nv);
+}
+void swiftperl_setpv(void *vp, char *pv) {
+    sv_setpv_mg((SV *)vp, pv);
+}
+// av getters
+void *swiftperl_get_av(char *name, int add) {
+    return (void *)get_av(name, add ? GV_ADD : 0);
+}
+int swiftperl_av_len(void *vp){
+    return av_len((AV *)vp);
+}
+void *swiftperl_av_fetch(void *vp, int key) {
+    SV **svp = av_fetch((AV *)vp, key, 0);
+    return svp ? (void *)*svp : NULL;
+}
+

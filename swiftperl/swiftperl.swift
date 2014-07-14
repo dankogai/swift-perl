@@ -44,15 +44,15 @@ class PerlSV : Printable {
             CString(swiftperl_reftype(sv))
         )!
     }
-    func toScalar() -> PerlSV? {
+    func derefScalar() -> PerlSV? {
         return refType == "SCALAR"
             ? PerlSV(swiftperl_deref(sv)) : nil
     }
-    func toArray() -> PerlAV? {
+    func derefArray() -> PerlAV? {
         return refType == "ARRAY"
             ? PerlAV(swiftperl_deref(sv)) : nil
     }
-    func toHash() -> PerlHV? {
+    func derefHash() -> PerlHV? {
         return refType == "HASH"
             ? PerlHV(swiftperl_deref(sv)) : nil
     }

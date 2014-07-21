@@ -29,7 +29,7 @@ class PerlSV : Printable {
     }
     var asString:String {
     get {
-        return String.fromCString(CString(swiftperl_svpv(sv)))!
+        return String.fromCString(swiftperl_svpv(sv))!
     }
     set {
         newValue.withCString {
@@ -41,7 +41,7 @@ class PerlSV : Printable {
     // References
     var refType: String {
         return String.fromCString(
-            CString(swiftperl_reftype(sv))
+            swiftperl_reftype(sv)
         )!
     }
     func derefScalar() -> PerlSV? {
@@ -95,9 +95,8 @@ class PerlHV : Printable {
         while true {
             let he = swiftperl_hv_iternext(hv)
             if he == nil { break }
-            let key = String.fromCString(
-                CString(swiftperl_hv_iterkey(he))
-                )!
+            let key =
+                String.fromCString(swiftperl_hv_iterkey(he))!
             result[key] = PerlSV(swiftperl_hv_iterval(he))
         }
         return result
@@ -145,7 +144,7 @@ class Perl {
         return swiftperl_err() == 0
     }
     var errstr:String {
-        return String.fromCString(CString(swiftperl_errstr()))!
+        return String.fromCString(swiftperl_errstr())!
     }
     func use(name:String)->PerlSV {
         return self.eval("use \(name);")

@@ -85,4 +85,3 @@ pl.use("Scalar::Util", "dualvar")
 let dv = pl.eval("dualvar 42, q(The Answer)")
 println(dv.asInt)
 println(dv.asString)
-

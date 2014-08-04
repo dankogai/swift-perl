@@ -7,8 +7,8 @@
 //
 
 class PerlSV : Printable {
-    let sv:UnsafePointer<()>
-    init (_ sv:UnsafePointer<()>){ self.sv = sv }
+    let sv:UnsafeMutablePointer<()>
+    init (_ sv:UnsafeMutablePointer<()>){ self.sv = sv }
     var defined:Bool    { return swiftperl_svok(sv) != 0 }
     func undef() { swiftperl_undef(sv) }
     var asBool:Bool     {
@@ -59,8 +59,8 @@ class PerlSV : Printable {
 }
 
 class PerlAV : Printable {
-    let av:UnsafePointer<()>
-    init (_ sv:UnsafePointer<()>){ self.av = sv }
+    let av:UnsafeMutablePointer<()>
+    init (_ sv:UnsafeMutablePointer<()>){ self.av = sv }
     func toArray()->[PerlSV?] {
         var result = [PerlSV?]()
         for i in 0...swiftperl_av_len(av) {
@@ -87,8 +87,8 @@ class PerlAV : Printable {
 }
 
 class PerlHV : Printable {
-    let hv:UnsafePointer<()>
-    init (_ hv:UnsafePointer<()>){ self.hv = hv }
+    let hv:UnsafeMutablePointer<()>
+    init (_ hv:UnsafeMutablePointer<()>){ self.hv = hv }
     func toDictionary()->[String:PerlSV?] {
         var result = [String:PerlSV?]()
         swiftperl_hv_iterinit(hv)
